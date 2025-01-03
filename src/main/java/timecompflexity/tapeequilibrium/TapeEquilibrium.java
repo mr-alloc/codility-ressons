@@ -4,26 +4,26 @@ public class TapeEquilibrium {
     /**
      * @see <a href="https://app.codility.com/programmers/lessons/3-time_complexity/tape_equilibrium/">Tape Equilibrium</a>
      */
-    public static int solution(int[] A) {
-        int smallestDifference = 100_000;
+    public static int solution(int [] A) {
 
+        int N = A.length;
+        int totalSum = 0;
+        int minDiff = Integer.MAX_VALUE;
+        int leftSum = 0;
 
-        for (int i = 1;i < A.length;i++) {
-            int leftSum = 0;
-            int rightSum = 0;
-            for (int j = 0;j < A.length;j++) {
-                if (j < i) {
-                    leftSum += A[j];
-                } else {
-                    rightSum += A[j];
-                }
-            }
-            int difference = Math.abs(leftSum - rightSum);
-            if (difference < smallestDifference) {
-                smallestDifference = difference;
-            }
+        // 전체 합 계산
+        for(int num : A) {
+            totalSum += num;
         }
 
-        return smallestDifference;
+        // 각 분할점에서의 차이 계산
+        for(int P = 1; P < N; P++) {
+            leftSum += A[P-1];
+            int rightSum = totalSum - leftSum;
+            int diff = Math.abs(leftSum - rightSum);
+            minDiff = Math.min(minDiff, diff);
+        }
+
+        return minDiff;
     }
 }
