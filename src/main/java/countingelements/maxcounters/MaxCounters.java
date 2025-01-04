@@ -1,5 +1,7 @@
 package countingelements.maxcounters;
 
+import java.util.Arrays;
+
 public class MaxCounters {
 
     /**
@@ -16,37 +18,43 @@ public class MaxCounters {
      *     <li>
      *         <ul>
      *             <li>만약 1 <= X <= N 즉, A[K] = X인 경우 K작업은 increase(X)한다.</li>
-     *             <li>만약 A[K] = N인 경우 K작업은 max counter이다.</li>
+     *             <li>만약 A[K] = N +1인 경우 K작업은 max counter이다.</li>
      *         </ul>
      *     </li>
      * </ul>
      */
-    public int[] solution(int N, int[] A) {
-        int [] result = new int [N];
+    public static int[] solution(int N, int[] A) {
+        int [] counters = new int [N];
         int M = A.length;
 
         if (outOfRange(N) || outOfRange(M)) {
-            return result;
+            return counters;
         }
 
-
-        for (int k = 0;k < A.length;k++) {
-            int current = A[k];
-            //increase
-            int max = 0;
-            if (current == N) {
-            } else {
-                result[A[k]]++;
-                for (int j = 0;j < result.length;j++) {
-                }
+        int max = 0;
+        int lastUpdate = 0;
+        for (int operation : A) {
+            if (1 <= operation && operation <= N) {
+                //increase(X) - 카운터 X는 1증가한다.
+                int index= operation -1;
+                counters[index] = Math.max(counters[index], lastUpdate);
+                counters[index]++;
+                max = Math.max(max, counters[index]);
+            } else if (operation == N +1) {
+                //max counter
+                lastUpdate = max;
             }
         }
 
+        for (int i = 0; i < N; i++) {
+            //lastUpdate 값으로 증가되지 않은 카운터를 초기화한다.
+            counters[i] = Math.max(counters[i], lastUpdate);
+        }
 
-        return result;
+        return counters;
     }
 
-    public boolean outOfRange(int num) {
+    public static boolean outOfRange(int num) {
         return num < 1 || 100_000 < num;
     }
 }
